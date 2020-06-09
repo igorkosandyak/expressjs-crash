@@ -1,18 +1,11 @@
 const express = require('express');
-const members = require('./Members');
+const uuid = require('uuid');
+const MembersService = require('./../../services/members-service')
 
 const router = express.Router();
 
-router.get('/', (req, res) => res.json(members));
-
-router.get('/:id', (req, res) => {
-    let member = members.filter(m => m.id == parseInt(req.params.id));
-    console.log('Member: ', member);
-    if (member.length === 0) {
-        res.status(400).json({msg : `Member with ID ${req.params.id} not found`})
-    } else {
-        res.send(member);        
-    }
-});
+router.get('/', (req, res) => MembersService.getAllMembers(res));
+router.get('/:id', (req, res) => MembersService.getMember(req.params.id, res));
+router.post('/', (req, res) => MembersService.createNewMember(req, res));
 
 module.exports = router;
