@@ -4,9 +4,12 @@
   "description": "Express Crash Course",
   "main": "index.js",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.16.4",
     "moment": "^2.26.0",
+    "mongoose": "^5.9.18",
     "nodemon": "^2.0.4",
+    "request": "^2.88.2",
     "uuid": "^8.1.0"
   },
   "devDependencies": {},

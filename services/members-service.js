@@ -1,38 +1,47 @@
 const uuid = require('uuid');
-const members = require('./../Members');
+const members = require('../repositories/Members');
+const request = require("request");
 
-     createNewMember = (req, res) => {
-        const newMember = {
-            id : uuid.v4(),
-            name : req.body.name,
-            email : req.body.email
-        };
-        if (!newMember.name || !newMember.email) {
-            res.status(400).json({msg : 'Email and Name should not be empty'})
-        } else {
-            members.push(newMember);
-            res.json({'status' : 'Success', 'members' : members})
-        }
-        
+const Member = require('./../models/Member');
 
-        
-    };
 
-    getMember = (id, res) => {
-        let member = members.filter(m => m.id == parseInt(id));
-        if (member.length === 0) {
-            res.status(400).json({msg : `Member with ID ${id} not found`})
-        } else {
-            res.send(member);        
-        }
+const create = async (req, res) => {
+    
+    const member = new Member({
+        email : req.body.email,
+        firstName : req.body.firstName,
+        lastName : req.body.lastName,
+        age : req.body.age
+    });
+    
+    try {
+        res.status(200).json(await member.save());
+    } catch(err) {
+        res.status(400).json({message : err})
     }
 
-    getAllMembers = (res) => {
-        res.json(members);
+};
+
+const get = (id, res) => {
+    let member = members.filter(m => m.id == parseInt(id));
+    if (member.length === 0) {
+        res.status(400).json({ msg: `Member with ID ${id} not found` })
+    } else {
+        res.send(member);
     }
+}
+
+const getAll = async (req, res) => {
+    try {
+        res.status(200).json(await Member.find());
+    } catch (err) {
+        res.status(500).json({message : err});
+    }
+
+}
 
 module.exports = {
-    createNewMember,
-    getMember,
-    getAllMembers
+    create,
+    get,
+    getAll
 };
